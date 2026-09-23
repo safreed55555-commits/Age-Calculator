@@ -1,0 +1,3192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AgeNova — Premium Age Calculator</title>
+
+<meta name="description"
+content="AgeNova is a stylish and accurate online age calculator. Calculate your exact age, total days, weeks, months, hours and next birthday.">
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+:root{
+
+    --primary:#6c5ce7;
+    --primary2:#8b5cf6;
+    --accent:#06b6d4;
+
+    --background:#f7f8fc;
+    --surface:#ffffff;
+    --surface2:#f1f3f9;
+
+    --text:#151827;
+    --muted:#6b7280;
+
+    --border:rgba(15,23,42,.08);
+
+    --shadow:
+        0 25px 70px rgba(40,35,90,.12);
+
+    --radius:24px;
+}
+
+body.dark{
+
+    --background:#080b16;
+    --surface:#101522;
+    --surface2:#151b2a;
+
+    --text:#f8fafc;
+    --muted:#9ca3af;
+
+    --border:rgba(255,255,255,.08);
+
+    --shadow:
+        0 25px 70px rgba(0,0,0,.45);
+}
+
+body{
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background:var(--background);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    transition:
+        background .35s,
+        color .35s;
+
+    overflow-x:hidden;
+}
+
+
+/* =========================================================
+   ANIMATED BACKGROUND
+========================================================= */
+
+.background-orb{
+
+    position:fixed;
+
+    width:420px;
+    height:420px;
+
+    border-radius:50%;
+
+    filter:blur(100px);
+
+    opacity:.17;
+
+    pointer-events:none;
+
+    z-index:-1;
+}
+
+.orb-one{
+
+    background:#6c5ce7;
+
+    top:-150px;
+    left:-120px;
+
+    animation:
+        floatOne 12s ease-in-out infinite;
+}
+
+.orb-two{
+
+    background:#06b6d4;
+
+    right:-150px;
+    top:35%;
+
+    animation:
+        floatTwo 14s ease-in-out infinite;
+}
+
+@keyframes floatOne{
+
+    0%,100%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(80px,70px);
+    }
+}
+
+@keyframes floatTwo{
+
+    0%,100%{
+        transform:translate(0,0);
+    }
+
+    50%{
+        transform:translate(-80px,-50px);
+    }
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:1000;
+
+    backdrop-filter:blur(20px);
+
+    background:
+        rgba(255,255,255,.72);
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+body.dark header{
+
+    background:
+        rgba(8,11,22,.72);
+}
+
+.navbar{
+
+    width:min(1180px,92%);
+
+    margin:auto;
+
+    min-height:76px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+}
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-weight:900;
+
+    font-size:22px;
+
+    letter-spacing:-.5px;
+}
+
+.logo-mark{
+
+    width:44px;
+    height:44px;
+
+    border-radius:14px;
+
+    display:grid;
+
+    place-items:center;
+
+    color:white;
+
+    font-size:21px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--accent)
+        );
+
+    box-shadow:
+        0 10px 25px
+        rgba(108,92,231,.3);
+}
+
+.logo-name{
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--accent)
+        );
+
+    -webkit-background-clip:text;
+
+    background-clip:text;
+
+    color:transparent;
+}
+
+.nav-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.nav-link{
+
+    text-decoration:none;
+
+    color:var(--muted);
+
+    font-size:14px;
+
+    font-weight:700;
+
+    padding:10px 13px;
+
+    border-radius:10px;
+
+    transition:.2s;
+}
+
+.nav-link:hover{
+
+    background:var(--surface2);
+
+    color:var(--primary);
+}
+
+.theme-btn{
+
+    width:42px;
+    height:42px;
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    transition:.25s;
+}
+
+.theme-btn:hover{
+
+    transform:
+        rotate(12deg)
+        translateY(-2px);
+
+    border-color:var(--primary);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+
+    width:min(1050px,92%);
+
+    margin:auto;
+
+    text-align:center;
+
+    padding:
+        85px 0 55px;
+}
+
+.hero-badge{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:
+        8px 15px;
+
+    border-radius:999px;
+
+    background:
+        rgba(108,92,231,.10);
+
+    border:
+        1px solid
+        rgba(108,92,231,.15);
+
+    color:var(--primary);
+
+    font-size:13px;
+
+    font-weight:800;
+
+    margin-bottom:22px;
+}
+
+.hero h1{
+
+    font-size:
+        clamp(42px,7vw,76px);
+
+    line-height:1;
+
+    letter-spacing:-4px;
+
+    font-weight:950;
+
+    margin-bottom:24px;
+}
+
+.hero-gradient{
+
+    background:
+        linear-gradient(
+            90deg,
+            #6c5ce7,
+            #8b5cf6,
+            #06b6d4
+        );
+
+    -webkit-background-clip:text;
+
+    background-clip:text;
+
+    color:transparent;
+
+    background-size:200%;
+
+    animation:
+        gradientMove 5s ease infinite;
+}
+
+@keyframes gradientMove{
+
+    0%,100%{
+        background-position:0%;
+    }
+
+    50%{
+        background-position:100%;
+    }
+}
+
+.hero p{
+
+    max-width:700px;
+
+    margin:auto;
+
+    color:var(--muted);
+
+    font-size:18px;
+
+    line-height:1.75;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.container{
+
+    width:min(1100px,92%);
+
+    margin:auto;
+}
+
+
+/* =========================================================
+   CALCULATOR
+========================================================= */
+
+.calculator{
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.88),
+            rgba(255,255,255,.65)
+        );
+
+    background-color:var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        30px;
+
+    padding:
+        38px;
+
+    box-shadow:
+        var(--shadow);
+
+    backdrop-filter:
+        blur(20px);
+
+    margin-bottom:28px;
+}
+
+body.dark .calculator{
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(20,26,42,.95),
+            rgba(15,20,32,.90)
+        );
+}
+
+.calculator-heading{
+
+    text-align:center;
+
+    margin-bottom:30px;
+}
+
+.calculator-heading h2{
+
+    font-size:28px;
+
+    margin-bottom:8px;
+}
+
+.calculator-heading p{
+
+    color:var(--muted);
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:20px;
+}
+
+.input-box label{
+
+    display:block;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    margin-bottom:9px;
+}
+
+.input-box input{
+
+    width:100%;
+
+    padding:
+        17px;
+
+    border:
+        1.5px solid var(--border);
+
+    border-radius:15px;
+
+    background:var(--surface2);
+
+    color:var(--text);
+
+    outline:none;
+
+    font-size:16px;
+
+    transition:.25s;
+}
+
+.input-box input:hover{
+
+    border-color:
+        rgba(108,92,231,.35);
+}
+
+.input-box input:focus{
+
+    border-color:
+        var(--primary);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(108,92,231,.10);
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.button-row{
+
+    display:flex;
+
+    gap:13px;
+
+    margin-top:23px;
+}
+
+.btn{
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:16px;
+
+    font-size:15px;
+
+    font-weight:850;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.calculate-btn{
+
+    flex:2;
+
+    color:white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6c5ce7,
+            #06b6d4
+        );
+
+    box-shadow:
+        0 12px 28px
+        rgba(108,92,231,.25);
+}
+
+.reset-btn{
+
+    flex:1;
+
+    color:var(--text);
+
+    background:var(--surface2);
+
+    border:
+        1px solid var(--border);
+}
+
+.btn:hover{
+
+    transform:
+        translateY(-3px);
+}
+
+.calculate-btn:hover{
+
+    box-shadow:
+        0 18px 35px
+        rgba(108,92,231,.35);
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error{
+
+    display:none;
+
+    margin-top:18px;
+
+    padding:13px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    color:#dc2626;
+
+    background:
+        rgba(239,68,68,.09);
+
+    font-weight:700;
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.result{
+
+    display:none;
+
+    margin-top:42px;
+
+    animation:
+        reveal .55s ease;
+}
+
+@keyframes reveal{
+
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.result-title{
+
+    text-align:center;
+
+    margin-bottom:20px;
+}
+
+.result-title h2{
+
+    font-size:28px;
+}
+
+.result-title p{
+
+    color:var(--muted);
+
+    font-size:14px;
+
+    margin-top:5px;
+}
+
+
+/* =========================================================
+   EXACT AGE
+========================================================= */
+
+.exact-age{
+
+    position:relative;
+
+    overflow:hidden;
+
+    text-align:center;
+
+    padding:
+        40px 20px;
+
+    border-radius:23px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(108,92,231,.11),
+            rgba(6,182,212,.10)
+        );
+
+    border:
+        1px solid
+        rgba(108,92,231,.14);
+
+    margin-bottom:22px;
+}
+
+.exact-age::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:200px;
+    height:200px;
+
+    border-radius:50%;
+
+    background:
+        rgba(108,92,231,.10);
+
+    filter:blur(35px);
+
+    top:-100px;
+    left:-70px;
+}
+
+.exact-age small{
+
+    position:relative;
+
+    display:block;
+
+    color:var(--muted);
+
+    margin-bottom:9px;
+}
+
+.age-text{
+
+    position:relative;
+
+    font-size:
+        clamp(30px,6vw,53px);
+
+    line-height:1.1;
+
+    font-weight:950;
+
+    letter-spacing:-2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--primary),
+            var(--accent)
+        );
+
+    -webkit-background-clip:text;
+
+    background-clip:text;
+
+    color:transparent;
+}
+
+.age-description{
+
+    position:relative;
+
+    color:var(--muted);
+
+    margin-top:9px;
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:14px;
+}
+
+.stat{
+
+    position:relative;
+
+    overflow:hidden;
+
+    padding:23px;
+
+    border-radius:18px;
+
+    background:var(--surface2);
+
+    border:
+        1px solid var(--border);
+
+    text-align:center;
+
+    transition:.25s;
+}
+
+.stat:hover{
+
+    transform:
+        translateY(-5px);
+
+    border-color:
+        rgba(108,92,231,.35);
+
+    box-shadow:
+        0 15px 35px
+        rgba(0,0,0,.06);
+}
+
+.stat-icon{
+
+    font-size:25px;
+
+    margin-bottom:8px;
+}
+
+.stat-value{
+
+    font-size:25px;
+
+    font-weight:950;
+
+    color:var(--primary);
+
+    margin-bottom:4px;
+}
+
+.stat-label{
+
+    font-size:12px;
+
+    color:var(--muted);
+
+    font-weight:600;
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:17px;
+
+    margin-top:18px;
+}
+
+.info-card{
+
+    padding:23px;
+
+    background:var(--surface2);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:19px;
+}
+
+.info-card h3{
+
+    font-size:17px;
+
+    margin-bottom:13px;
+}
+
+.info-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    padding:10px 0;
+
+    border-bottom:
+        1px dashed var(--border);
+
+    font-size:13px;
+}
+
+.info-row:last-child{
+
+    border-bottom:none;
+}
+
+.info-row span:first-child{
+
+    color:var(--muted);
+}
+
+.info-row span:last-child{
+
+    font-weight:800;
+
+    text-align:right;
+}
+
+
+/* =========================================================
+   BIRTHDAY
+========================================================= */
+
+.birthday{
+
+    margin-top:18px;
+
+    padding:28px;
+
+    border-radius:21px;
+
+    text-align:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34,197,94,.09),
+            rgba(6,182,212,.08)
+        );
+
+    border:
+        1px solid
+        rgba(34,197,94,.17);
+}
+
+.birthday h3{
+
+    color:#16a34a;
+
+    margin-bottom:6px;
+}
+
+.birthday p{
+
+    color:var(--muted);
+
+    font-size:14px;
+}
+
+.countdown{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:10px;
+
+    margin-top:19px;
+}
+
+.countdown-box{
+
+    background:var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:14px;
+
+    padding:15px 8px;
+}
+
+.countdown-number{
+
+    display:block;
+
+    font-size:25px;
+
+    font-weight:950;
+
+    color:var(--primary);
+}
+
+.countdown-label{
+
+    font-size:11px;
+
+    color:var(--muted);
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:9px;
+
+    flex-wrap:wrap;
+
+    margin-top:20px;
+}
+
+.action{
+
+    border:
+        1px solid var(--border);
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    border-radius:11px;
+
+    padding:
+        10px 15px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+    font-weight:750;
+
+    transition:.2s;
+}
+
+.action:hover{
+
+    color:var(--primary);
+
+    border-color:
+        var(--primary);
+
+    transform:
+        translateY(-2px);
+}
+
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.features{
+
+    width:min(1100px,92%);
+
+    margin:
+        0 auto 65px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:18px;
+}
+
+.feature{
+
+    background:var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:27px;
+
+    box-shadow:
+        0 10px 35px
+        rgba(0,0,0,.04);
+
+    transition:.25s;
+}
+
+.feature:hover{
+
+    transform:
+        translateY(-5px);
+
+    box-shadow:
+        var(--shadow);
+}
+
+.feature-icon{
+
+    width:50px;
+    height:50px;
+
+    border-radius:15px;
+
+    display:grid;
+
+    place-items:center;
+
+    font-size:23px;
+
+    background:
+        rgba(108,92,231,.10);
+
+    margin-bottom:17px;
+}
+
+.feature h3{
+
+    margin-bottom:8px;
+
+    font-size:17px;
+}
+
+.feature p{
+
+    color:var(--muted);
+
+    line-height:1.65;
+
+    font-size:14px;
+}
+
+
+/* =========================================================
+   FAQ
+========================================================= */
+
+.faq{
+
+    width:min(850px,92%);
+
+    margin:
+        0 auto 70px;
+}
+
+.section-heading{
+
+    text-align:center;
+
+    margin-bottom:25px;
+}
+
+.section-heading h2{
+
+    font-size:31px;
+
+    margin-bottom:7px;
+}
+
+.section-heading p{
+
+    color:var(--muted);
+
+    font-size:14px;
+}
+
+.faq-item{
+
+    background:var(--surface);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:16px;
+
+    margin-bottom:10px;
+
+    overflow:hidden;
+}
+
+.faq-question{
+
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    background:transparent;
+
+    color:var(--text);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    text-align:left;
+
+    font-size:15px;
+
+    font-weight:800;
+}
+
+.faq-answer{
+
+    display:none;
+
+    padding:
+        0 18px 18px;
+
+    color:var(--muted);
+
+    line-height:1.7;
+
+    font-size:14px;
+}
+
+.faq-item.open .faq-answer{
+
+    display:block;
+}
+
+.faq-item.open .plus{
+
+    transform:rotate(45deg);
+}
+
+.plus{
+
+    font-size:21px;
+
+    transition:.25s;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+
+    border-top:
+        1px solid var(--border);
+
+    padding:
+        35px 20px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    background:var(--surface);
+}
+
+.footer-logo{
+
+    font-size:21px;
+
+    font-weight:900;
+
+    margin-bottom:8px;
+
+    color:var(--primary);
+}
+
+footer p{
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+
+    position:fixed;
+
+    left:50%;
+
+    bottom:25px;
+
+    z-index:5000;
+
+    transform:
+        translate(-50%,120px);
+
+    opacity:0;
+
+    padding:
+        13px 19px;
+
+    border-radius:12px;
+
+    background:#111827;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:750;
+
+    transition:.3s;
+}
+
+.toast.show{
+
+    transform:
+        translate(-50%,0);
+
+    opacity:1;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:850px){
+
+    .stats-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .features{
+
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .nav-link{
+
+        display:none;
+    }
+
+    .hero{
+
+        padding-top:55px;
+    }
+
+    .hero h1{
+
+        letter-spacing:-2.5px;
+    }
+
+    .calculator{
+
+        padding:23px;
+    }
+
+    .input-grid,
+    .info-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .button-row{
+
+        flex-direction:column;
+    }
+
+    .stats-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .countdown{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .age-text{
+
+        letter-spacing:-1px;
+    }
+}
+
+@media(max-width:400px){
+
+    .hero h1{
+
+        font-size:40px;
+    }
+
+    .calculator{
+
+        border-radius:21px;
+    }
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    header,
+    .hero,
+    .features,
+    .faq,
+    footer,
+    .actions,
+    .button-row{
+
+        display:none !important;
+    }
+
+    body{
+
+        background:white;
+
+        color:black;
+    }
+
+    .calculator{
+
+        box-shadow:none;
+
+        border:none;
+    }
+
+    .result{
+
+        display:block !important;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- BACKGROUND -->
+
+<div class="background-orb orb-one"></div>
+<div class="background-orb orb-two"></div>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+<div class="navbar">
+
+    <div class="logo">
+
+        <div class="logo-mark">
+            ⏳
+        </div>
+
+        <div class="logo-name">
+            Age Nova
+        </div>
+
+    </div>
+
+
+    <div class="nav-right">
+
+        <a
+            class="nav-link"
+            href="#calculator"
+        >
+            Calculator
+        </a>
+
+        <a
+            class="nav-link"
+            href="#features"
+        >
+            Features
+        </a>
+
+        <a
+            class="nav-link"
+            href="#faq"
+        >
+            FAQ
+        </a>
+
+        <button
+            class="theme-btn"
+            id="themeButton"
+            onclick="toggleTheme()"
+            title="Change theme"
+        >
+            🌙
+        </button>
+
+    </div>
+
+</div>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-badge">
+        ✨ Professional Age Calculator
+    </div>
+
+
+    <h1>
+
+        Know Your
+
+        <span class="hero-gradient">
+            Exact Age
+        </span>
+
+    </h1>
+
+
+    <p>
+
+        A beautiful, accurate and private way to
+        discover your exact age, total time lived,
+        next birthday and more.
+
+    </p>
+
+</section>
+
+
+<!-- =====================================================
+     CALCULATOR
+===================================================== -->
+
+<main
+    class="container"
+    id="calculator"
+>
+
+<div class="calculator">
+
+
+    <div class="calculator-heading">
+
+        <h2>
+            Calculate Your Age Afreed
+        </h2>
+
+        <p>
+            Enter your birth date and choose the date
+            you want to calculate your age on.
+        </p>
+
+    </div>
+
+
+    <!-- INPUTS -->
+
+    <div class="input-grid">
+
+
+        <div class="input-box">
+
+            <label>
+                📅 Date of Birth
+            </label>
+
+            <input
+                type="date"
+                id="dob"
+            >
+
+        </div>
+
+
+        <div class="input-box">
+
+            <label>
+                🗓️ Calculate Age On
+            </label>
+
+            <input
+                type="date"
+                id="calculateDate"
+            >
+
+        </div>
+
+
+    </div>
+
+
+    <!-- BUTTONS -->
+
+    <div class="button-row">
+
+        <button
+            class="btn calculate-btn"
+            onclick="calculateAge()"
+        >
+            ✨ Calculate My Age
+        </button>
+
+
+        <button
+            class="btn reset-btn"
+            onclick="resetCalculator()"
+        >
+            ↻ Reset
+        </button>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+        class="error"
+        id="error"
+    ></div>
+
+
+    <!-- =================================================
+         RESULTS
+    ================================================= -->
+
+    <section
+        class="result"
+        id="result"
+    >
+
+
+        <div class="result-title">
+
+            <h2>
+                Your Age Results
+            </h2>
+
+            <p>
+                Here is your complete age breakdown.
+            </p>
+
+        </div>
+
+
+        <!-- EXACT AGE -->
+
+        <div class="exact-age">
+
+            <small>
+                Your exact age
+            </small>
+
+
+            <div
+                class="age-text"
+                id="ageText"
+            >
+                0 Years, 0 Months, 0 Days
+            </div>
+
+
+            <div class="age-description">
+                Based on the dates you entered.
+            </div>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    🎂
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="years"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Years
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    📆
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="months"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Extra Months
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    📅
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="days"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Extra Days
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    🗓️
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalMonths"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total Months
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    📊
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalWeeks"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total Weeks
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    ☀️
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalDays"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total Days
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    ⏰
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalHours"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total Hours
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    ⏱️
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalMinutes"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total Minutes
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    ⚡
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalSeconds"
+                >
+                    0
+                </div>
+
+                <div class="stat-label">
+                    Total Seconds
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="info-grid">
+
+
+            <div class="info-card">
+
+                <h3>
+                    👤 Personal Details
+                </h3>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Date of Birth
+                    </span>
+
+                    <span id="displayDOB">
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Born On
+                    </span>
+
+                    <span id="birthDay">
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Zodiac Sign
+                    </span>
+
+                    <span id="zodiac">
+                        —
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <h3>
+                    📌 Birthday Details
+                </h3>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Next Birthday
+                    </span>
+
+                    <span id="nextBirthday">
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Weekday
+                    </span>
+
+                    <span id="birthdayDay">
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span>
+                        Turning
+                    </span>
+
+                    <span id="turningAge">
+                        —
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- BIRTHDAY -->
+
+        <div class="birthday">
+
+            <h3>
+                🎉 Next Birthday
+            </h3>
+
+            <p id="birthdayMessage">
+                —
+            </p>
+
+
+            <div class="countdown">
+
+
+                <div class="countdown-box">
+
+                    <span
+                        class="countdown-number"
+                        id="cdDays"
+                    >
+                        0
+                    </span>
+
+                    <span class="countdown-label">
+                        Days
+                    </span>
+
+                </div>
+
+
+                <div class="countdown-box">
+
+                    <span
+                        class="countdown-number"
+                        id="cdHours"
+                    >
+                        0
+                    </span>
+
+                    <span class="countdown-label">
+                        Hours
+                    </span>
+
+                </div>
+
+
+                <div class="countdown-box">
+
+                    <span
+                        class="countdown-number"
+                        id="cdMinutes"
+                    >
+                        0
+                    </span>
+
+                    <span class="countdown-label">
+                        Minutes
+                    </span>
+
+                </div>
+
+
+                <div class="countdown-box">
+
+                    <span
+                        class="countdown-number"
+                        id="cdSeconds"
+                    >
+                        0
+                    </span>
+
+                    <span class="countdown-label">
+                        Seconds
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+            <button
+                class="action"
+                onclick="copyResult()"
+            >
+                📋 Copy Result
+            </button>
+
+
+            <button
+                class="action"
+                onclick="shareResult()"
+            >
+                📤 Share
+            </button>
+
+
+            <button
+                class="action"
+                onclick="window.print()"
+            >
+                🖨️ Print
+            </button>
+
+        </div>
+
+
+    </section>
+
+</div>
+
+</main>
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section
+    class="features"
+    id="features"
+>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            🎯
+        </div>
+
+        <h3>
+            Accurate
+        </h3>
+
+        <p>
+            Calculate your age using years,
+            months and days for a detailed
+            result rather than a simple estimate.
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            ⚡
+        </div>
+
+        <h3>
+            Instant
+        </h3>
+
+        <p>
+            Your calculation happens immediately
+            in your browser without unnecessary
+            waiting or registration.
+        </p>
+
+    </div>
+
+
+    <div class="feature">
+
+        <div class="feature-icon">
+            🔒
+        </div>
+
+        <h3>
+            Private
+        </h3>
+
+        <p>
+            Your dates stay in your browser.
+            No account or server is required
+            to calculate your age.
+        </p>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FAQ
+===================================================== -->
+
+<section
+    class="faq"
+    id="faq"
+>
+
+
+    <div class="section-heading">
+
+        <h2>
+            Frequently Asked Questions
+        </h2>
+
+        <p>
+            Everything you need to know about the calculator.
+        </p>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            onclick="toggleFAQ(this)"
+        >
+
+            How is my exact age calculated?
+
+            <span class="plus">
+                +
+            </span>
+
+        </button>
+
+
+        <div class="faq-answer">
+
+            Your age is calculated by comparing your
+            date of birth with the selected calculation
+            date. The result is displayed in years,
+            months and days.
+
+        </div>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            onclick="toggleFAQ(this)"
+        >
+
+            Can I calculate my age on a future date?
+
+            <span class="plus">
+                +
+            </span>
+
+        </button>
+
+
+        <div class="faq-answer">
+
+            Yes. Select any valid future date in the
+            "Calculate Age On" field to find out how
+            old you will be on that date.
+
+        </div>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            onclick="toggleFAQ(this)"
+        >
+
+            Does the calculator store my date of birth?
+
+            <span class="plus">
+                +
+            </span>
+
+        </button>
+
+
+        <div class="faq-answer">
+
+            No. This standalone version performs the
+            calculation directly inside your browser.
+            It does not require an account or database.
+
+        </div>
+
+    </div>
+
+
+    <div class="faq-item">
+
+        <button
+            class="faq-question"
+            onclick="toggleFAQ(this)"
+        >
+
+            Can I use it on a mobile phone?
+
+            <span class="plus">
+                +
+            </span>
+
+        </button>
+
+
+        <div class="faq-answer">
+
+            Yes. The website is fully responsive and
+            automatically adapts to phones, tablets
+            and desktop screens.
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <div class="footer-logo">
+        AgeNova
+    </div>
+
+    <p>
+        A stylish, accurate and privacy-friendly
+        age calculator.
+    </p>
+
+    <p style="margin-top:10px;">
+        © 2026 AgeNova. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    Copied successfully!
+</div>
+
+
+<script>
+
+/* =========================================================
+   INITIAL DATE
+========================================================= */
+
+function inputDate(date){
+
+    return date.getFullYear() +
+        "-" +
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0") +
+        "-" +
+        String(
+            date.getDate()
+        ).padStart(2,"0");
+
+}
+
+document.getElementById(
+    "calculateDate"
+).value =
+    inputDate(new Date());
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+let birthdayTimer;
+
+
+/* =========================================================
+   CALCULATE
+========================================================= */
+
+function calculateAge(){
+
+    const dobValue =
+        document.getElementById(
+            "dob"
+        ).value;
+
+    const calculateValue =
+        document.getElementById(
+            "calculateDate"
+        ).value;
+
+    const error =
+        document.getElementById(
+            "error"
+        );
+
+
+    error.style.display =
+        "none";
+
+
+    if(!dobValue || !calculateValue){
+
+        error.textContent =
+            "Please enter both dates.";
+
+        error.style.display =
+            "block";
+
+        return;
+    }
+
+
+    const dob =
+        new Date(
+            dobValue + "T00:00:00"
+        );
+
+    const calculateDate =
+        new Date(
+            calculateValue + "T00:00:00"
+        );
+
+
+    if(
+        isNaN(dob) ||
+        isNaN(calculateDate)
+    ){
+
+        error.textContent =
+            "Please enter valid dates.";
+
+        error.style.display =
+            "block";
+
+        return;
+    }
+
+
+    if(dob > calculateDate){
+
+        error.textContent =
+            "Date of birth cannot be after the calculation date.";
+
+        error.style.display =
+            "block";
+
+        return;
+    }
+
+
+    /* EXACT AGE */
+
+    let years =
+        calculateDate.getFullYear()
+        -
+        dob.getFullYear();
+
+    let months =
+        calculateDate.getMonth()
+        -
+        dob.getMonth();
+
+    let days =
+        calculateDate.getDate()
+        -
+        dob.getDate();
+
+
+    if(days < 0){
+
+        months--;
+
+        const previousMonth =
+            new Date(
+                calculateDate.getFullYear(),
+                calculateDate.getMonth(),
+                0
+            );
+
+        days +=
+            previousMonth.getDate();
+    }
+
+
+    if(months < 0){
+
+        years--;
+
+        months += 12;
+    }
+
+
+    document.getElementById(
+        "ageText"
+    ).textContent =
+        `${years} Years, ${months} Months, ${days} Days`;
+
+
+    /* STATS */
+
+    const milliseconds =
+        calculateDate.getTime()
+        -
+        dob.getTime();
+
+    const dayMS =
+        86400000;
+
+    const totalDays =
+        Math.floor(
+            milliseconds / dayMS
+        );
+
+    const totalWeeks =
+        Math.floor(
+            totalDays / 7
+        );
+
+    const totalMonths =
+        years * 12 + months;
+
+    const totalHours =
+        totalDays * 24;
+
+    const totalMinutes =
+        totalHours * 60;
+
+    const totalSeconds =
+        totalMinutes * 60;
+
+
+    setText(
+        "years",
+        years
+    );
+
+    setText(
+        "months",
+        months
+    );
+
+    setText(
+        "days",
+        days
+    );
+
+    setText(
+        "totalMonths",
+        totalMonths
+    );
+
+    setText(
+        "totalWeeks",
+        totalWeeks
+    );
+
+    setText(
+        "totalDays",
+        totalDays
+    );
+
+    setText(
+        "totalHours",
+        totalHours
+    );
+
+    setText(
+        "totalMinutes",
+        totalMinutes
+    );
+
+    setText(
+        "totalSeconds",
+        totalSeconds
+    );
+
+
+    /* PERSONAL */
+
+    setText(
+        "displayDOB",
+        formatDate(dob)
+    );
+
+    setText(
+        "birthDay",
+        getWeekday(dob)
+    );
+
+    setText(
+        "zodiac",
+        getZodiac(dob)
+    );
+
+
+    /* NEXT BIRTHDAY */
+
+    let nextBirthday =
+        new Date(
+            calculateDate.getFullYear(),
+            dob.getMonth(),
+            dob.getDate()
+        );
+
+
+    if(nextBirthday < calculateDate){
+
+        nextBirthday =
+            new Date(
+                calculateDate.getFullYear()+1,
+                dob.getMonth(),
+                dob.getDate()
+            );
+    }
+
+
+    /*
+       Leap-year correction
+    */
+
+    if(
+        dob.getMonth() === 1 &&
+        dob.getDate() === 29 &&
+        !isLeap(
+            nextBirthday.getFullYear()
+        )
+    ){
+
+        nextBirthday =
+            new Date(
+                nextBirthday.getFullYear(),
+                1,
+                28
+            );
+    }
+
+
+    setText(
+        "nextBirthday",
+        formatDate(nextBirthday)
+    );
+
+    setText(
+        "birthdayDay",
+        getWeekday(nextBirthday)
+    );
+
+
+    const turning =
+        nextBirthday.getFullYear()
+        -
+        dob.getFullYear();
+
+
+    setText(
+        "turningAge",
+        turning
+    );
+
+
+    /* COUNTDOWN */
+
+    startCountdown(
+        nextBirthday
+    );
+
+
+    document.getElementById(
+        "result"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "result"
+    ).scrollIntoView({
+
+        behavior:"smooth",
+
+        block:"start"
+
+    });
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function setText(id,value){
+
+    document.getElementById(id)
+        .textContent =
+        Number.isFinite(value)
+        ?
+        Number(value).toLocaleString()
+        :
+        value;
+
+}
+
+
+function formatDate(date){
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        }
+    );
+
+}
+
+
+function getWeekday(date){
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            weekday:"long"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ZODIAC
+========================================================= */
+
+function getZodiac(date){
+
+    const d =
+        date.getDate();
+
+    const m =
+        date.getMonth()+1;
+
+
+    if(
+        (m===3 && d>=21) ||
+        (m===4 && d<=19)
+    )
+        return "♈ Aries";
+
+
+    if(
+        (m===4 && d>=20) ||
+        (m===5 && d<=20)
+    )
+        return "♉ Taurus";
+
+
+    if(
+        (m===5 && d>=21) ||
+        (m===6 && d<=20)
+    )
+        return "♊ Gemini";
+
+
+    if(
+        (m===6 && d>=21) ||
+        (m===7 && d<=22)
+    )
+        return "♋ Cancer";
+
+
+    if(
+        (m===7 && d>=23) ||
+        (m===8 && d<=22)
+    )
+        return "♌ Leo";
+
+
+    if(
+        (m===8 && d>=23) ||
+        (m===9 && d<=22)
+    )
+        return "♍ Virgo";
+
+
+    if(
+        (m===9 && d>=23) ||
+        (m===10 && d<=22)
+    )
+        return "♎ Libra";
+
+
+    if(
+        (m===10 && d>=23) ||
+        (m===11 && d<=21)
+    )
+        return "♏ Scorpio";
+
+
+    if(
+        (m===11 && d>=22) ||
+        (m===12 && d<=21)
+    )
+        return "♐ Sagittarius";
+
+
+    if(
+        (m===12 && d>=22) ||
+        (m===1 && d<=19)
+    )
+        return "♑ Capricorn";
+
+
+    if(
+        (m===1 && d>=20) ||
+        (m===2 && d<=18)
+    )
+        return "♒ Aquarius";
+
+
+    return "♓ Pisces";
+
+}
+
+
+/* =========================================================
+   LEAP YEAR
+========================================================= */
+
+function isLeap(year){
+
+    return (
+        year % 4 === 0 &&
+        (
+            year % 100 !== 0 ||
+            year % 400 === 0
+        )
+    );
+
+}
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+function startCountdown(target){
+
+    if(birthdayTimer){
+
+        clearInterval(
+            birthdayTimer
+        );
+    }
+
+
+    function update(){
+
+        const now =
+            new Date();
+
+        let diff =
+            target.getTime()
+            -
+            now.getTime();
+
+
+        if(diff < 0)
+            diff = 0;
+
+
+        const days =
+            Math.floor(
+                diff / 86400000
+            );
+
+        const hours =
+            Math.floor(
+                (diff % 86400000)
+                / 3600000
+            );
+
+        const minutes =
+            Math.floor(
+                (diff % 3600000)
+                / 60000
+            );
+
+        const seconds =
+            Math.floor(
+                (diff % 60000)
+                / 1000
+            );
+
+
+        setText(
+            "cdDays",
+            days
+        );
+
+        document.getElementById(
+            "cdHours"
+        ).textContent =
+            String(hours).padStart(2,"0");
+
+        document.getElementById(
+            "cdMinutes"
+        ).textContent =
+            String(minutes).padStart(2,"0");
+
+        document.getElementById(
+            "cdSeconds"
+        ).textContent =
+            String(seconds).padStart(2,"0");
+
+
+        document.getElementById(
+            "birthdayMessage"
+        ).textContent =
+            `${days} days until your next birthday 🎂`;
+
+    }
+
+
+    update();
+
+    birthdayTimer =
+        setInterval(
+            update,
+            1000
+        );
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetCalculator(){
+
+    document.getElementById(
+        "dob"
+    ).value = "";
+
+    document.getElementById(
+        "calculateDate"
+    ).value =
+        inputDate(new Date());
+
+    document.getElementById(
+        "result"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "error"
+    ).style.display =
+        "none";
+
+
+    if(birthdayTimer){
+
+        clearInterval(
+            birthdayTimer
+        );
+    }
+
+}
+
+
+/* =========================================================
+   COPY
+========================================================= */
+
+function copyResult(){
+
+    const text =
+`AgeNova Result
+
+Exact Age:
+${document.getElementById("ageText").textContent}
+
+Date of Birth:
+${document.getElementById("displayDOB").textContent}
+
+Born On:
+${document.getElementById("birthDay").textContent}
+
+Zodiac:
+${document.getElementById("zodiac").textContent}
+
+Total Days:
+${document.getElementById("totalDays").textContent}
+
+Total Weeks:
+${document.getElementById("totalWeeks").textContent}
+
+Total Months:
+${document.getElementById("totalMonths").textContent}
+
+Next Birthday:
+${document.getElementById("nextBirthday").textContent}`;
+
+
+    navigator.clipboard
+        .writeText(text)
+        .then(()=>{
+
+            showToast(
+                "Result copied successfully!"
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+function shareResult(){
+
+    const text =
+        `My exact age is ${document.getElementById("ageText").textContent}.`;
+
+    if(
+        navigator.share
+    ){
+
+        navigator.share({
+
+            title:
+                "My Age Result",
+
+            text:
+                text,
+
+            url:
+                window.location.href
+
+        });
+
+    }
+    else{
+
+        navigator.clipboard
+            .writeText(text);
+
+        showToast(
+            "Result copied for sharing."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    toast.textContent =
+        message;
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    setTimeout(()=>{
+
+        toast.classList.remove(
+            "show"
+        );
+
+    },2500);
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+function toggleTheme(){
+
+    document.body
+        .classList
+        .toggle("dark");
+
+
+    const dark =
+        document.body
+            .classList
+            .contains("dark");
+
+
+    document.getElementById(
+        "themeButton"
+    ).textContent =
+        dark ? "☀️" : "🌙";
+
+
+    localStorage.setItem(
+        "agenova-theme",
+        dark ? "dark" : "light"
+    );
+
+}
+
+
+if(
+    localStorage.getItem(
+        "agenova-theme"
+    ) === "dark"
+){
+
+    document.body
+        .classList
+        .add("dark");
+
+    document.getElementById(
+        "themeButton"
+    ).textContent =
+        "☀️";
+
+}
+
+
+/* =========================================================
+   FAQ
+========================================================= */
+
+function toggleFAQ(button){
+
+    const item =
+        button.parentElement;
+
+    item.classList.toggle(
+        "open"
+    );
+
+}
+
+</script>
+
+</body>
+</html>
